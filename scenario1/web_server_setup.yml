@@ -1,0 +1,19 @@
+---
+- name: Set up NGINX Web Server on Debian
+  hosts: vms
+  become: true
+  tasks:
+    - name: Update APT package index
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install NGINX
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Ensure NGINX is started and enabled at boot
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
