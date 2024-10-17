@@ -1,0 +1,46 @@
+---
+- name: Set up NGINX Web Server on Debian
+  hosts: vms
+  become: true
+  tasks:
+    - name: Update APT package index
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install NGINX
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Ensure NGINX is started and enabled at boot
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Create a simple HTML file for the web server
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Welcome to Ansible Web Server!</title>
+          </head>
+          <body>
+              <h1>Hello from Ansible!</h1>
+              <p>This is a simple web page deployed via Ansible on a Debian host.</p>
+          </body>
+          </html>
+        mode: '0644'
+
+    - name: Test if NGINX is running
+      ansible.builtin.shell: 
+        cmd: |
+          curl http://{{ ansible_default_ipv4.address }}/
+        executable: /bin/bash
+      register: nginx_test
+
+    - name: Display the NGINX test stdout
+      ansible.builtin.debug:
+        msg: "{{ nginx_test.stdout }}"
