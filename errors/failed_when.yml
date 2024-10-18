@@ -1,0 +1,16 @@
+---
+- name: Set up NGINX Web Server on Debian
+  hosts: vms
+  become: true
+  tasks:
+    - name: Check if a web service is up
+      ansible.builtin.uri:
+        url: http://example.com
+        return_content: true
+      register: webpage
+      failed_when: webpage.status != 200
+
+    - name: Display content
+      ansible.builtin.debug:
+        msg: "Webpage url {{ webpage.url }} status is : {{ webpage.status }}"
+
