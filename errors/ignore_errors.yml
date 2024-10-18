@@ -1,0 +1,10 @@
+---
+- name: Set up NGINX Web Server on Debian
+  hosts: vms
+  become: true
+  tasks:
+    - name: Try to install a package that might not be available
+      ansible.builtin.apt:
+        name: non-existent-package
+        state: present
+      ignore_errors: true

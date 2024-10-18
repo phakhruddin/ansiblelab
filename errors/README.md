@@ -5,10 +5,10 @@ In Ansible, handling errors gracefully means ensuring that playbook failures do 
 
    ```yaml
    - name: Try to install a package that might not be available
-     apt:
-       name: non-existent-package
-       state: present
-     ignore_errors: yes
+      ansible.builtin.apt:
+        name: non-existent-package
+        state: present
+      ignore_errors: true
    ```
 
    **Note**: Be cautious when using `ignore_errors` because it suppresses all errors, which may lead to unexpected outcomes.
@@ -18,11 +18,15 @@ In Ansible, handling errors gracefully means ensuring that playbook failures do 
 
    ```yaml
    - name: Check if a web service is up
-     uri:
-       url: http://example.com
-       return_content: yes
-     register: webpage
-     failed_when: webpage.status != 200
+      ansible.builtin.uri:
+        url: http://example.com
+        return_content: true
+      register: webpage
+      failed_when: webpage.status != 200
+
+    - name: Display content
+      ansible.builtin.debug:
+        msg: "Webpage url {{ webpage.url }} status is : {{ webpage.status }}"
    ```
 
    Here, the task will only fail if the HTTP status is not `200`.
