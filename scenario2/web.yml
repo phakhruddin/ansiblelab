@@ -35,12 +35,20 @@
         mode: '0644'
 
     - name: Test if NGINX is running
-      ansible.builtin.shell: 
-        cmd: |
-          curl http://{{ ansible_default_ipv4.address }}/
-        executable: /bin/bash
+      ansible.builtin.shell: "curl http://{{ ansible_default_ipv4.address }}"
       register: nginx_test
 
     - name: Display the NGINX test stdout
       ansible.builtin.debug:
         msg: "{{ nginx_test.stdout }}"
+      when: nginx_test.stdout != ""
+
+    - name: Test if NGINX is running again
+      ansible.builtin.shell: 
+        cmd: |
+             curl http://{{ ansible_default_ipv4.address }}
+        executable: /bin/bash
+      register: nginx_test1
+    - name: Display the NGINX test stdout again
+      ansible.builtin.debug:
+        msg: "{{ nginx_test.stdout_lines }}"
