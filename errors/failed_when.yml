@@ -13,4 +13,3 @@
     - name: Display content
       ansible.builtin.debug:
         msg: "Webpage url {{ webpage.url }} status is : {{ webpage.status }}"
-
